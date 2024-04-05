@@ -1,0 +1,27 @@
+{
+  "name": "spacemon",
+  "version": "1.0.0",
+  "description": "Filecoin Space Monitor",
+  "main": "spacemon.js",
+  "private": true,
+  "type": "module",
+  "bin": "spacemon.js",
+  "scripts": {
+    "lint": "standard",
+    "test": "npm run lint",
+    "start": "node spacemon.js"
+  },
+  "author": {
+    "name": "Rod Vagg",
+    "email": "rod@vagg.org"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@ipld/dag-cbor": "^9.2.0",
+    "@ipld/dag-json": "^10.2.0",
+    "@ipld/schema": "^4.2.14",
+    "multiformats": "^13.1.0",
+    "standard": "^17.1.0",
+    "undici": "^6.11.1"
+  }
+}

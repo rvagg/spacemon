@@ -1,0 +1,239 @@
+# From FIP-0083: https://github.com/filecoin-project/FIPs/blob/master/FIPS/fip-0083.md
+
+# | flags              | key        | value                                                                                      |
+# |--------------------|------------| ------------------------------------------------------------------------------------------ |
+# | Index Key + Value  | "$type"    | "verifier-balance" (string)                                                                |
+# | Index Key + Value  | "verifier" | <VERIFIER_ACTOR_ID> (int)                                                                  |
+# | Index Key + Value  | "client"   | <DATACAP_HOLDER_ACTOR_ID> (optional int) (only present when datacap allocated to a client) |
+# | Index Key          | "balance"  | <VERIFIER_DATACAP_BALANCE> (bigint)                                                        |
+
+type VerifierBalanceEvent struct {
+  verifier Int
+  client optional Int
+  balance Bytes
+}
+
+# | flags             | key          | value                    |
+# | ----------------- | ------------ | ------------------------ |
+# | Index Key + Value | "$type"      | "allocation" (string)    |
+# | Index Key + Value | "id"         | <ALLOCATION_ID> (int)    |
+# | Index Key + Value | "client"     | <CLIENT_ACTOR_ID> (int)  |
+# | Index Key + Value | "provider"   | <SP_ACTOR_ID> (int)      |
+# | Index Key + Value | "piece-cid"  | <PIECE_CID> (cid)        |
+# | Index Key         | "piece-size" | <PIECE_SIZE> (int)       |
+# | Index Key         | "term-min"   | <TERM_MINIMUM> (int)     |
+# | Index Key         | "term-max"   | <TERM_MAXIMUM> (int)     |
+# | Index Key         | "expiration" | <EXPIRATION_EPOCH> (int) |
+
+type AllocationEvent struct {
+  id Int
+  client Int
+  provider Int
+  pieceCid &Any
+  pieceSize Int
+  termMin Int
+  termMax Int
+  expiration Int
+}
+
+# | flags             | key          | value                         |
+# | ----------------- | ------------ | ----------------------------- |
+# | Index Key + Value | "$type"      | "allocation-removed" (string) |
+# | Index Key + Value | "id"         | <ALLOCATION_ID> (int)         |
+# | Index Key + Value | "client"     | <CLIENT_ACTOR_ID> (int)       |
+# | Index Key + Value | "provider"   | <SP_ACTOR_ID> (int)           |
+# | Index Key + Value | "piece-cid"  | <PIECE_CID> (cid)             |
+# | Index Key         | "piece-size" | <PIECE_SIZE> (int)            |
+# | Index Key         | "term-min"   | <TERM_MINIMUM> (int)          |
+# | Index Key         | "term-max"   | <TERM_MAXIMUM> (int)          |
+# | Index Key         | "expiration" | <EXPIRATION_EPOCH> (int)      |
+
+type AllocationRemovedEvent struct {
+  id Int
+  client Int
+  provider Int
+  pieceCid &Any
+  pieceSize Int
+  termMin Int
+  termMax Int
+  expiration Int
+}
+
+# | flags             | key          | value                    |
+# | ----------------- | ------------ | ------------------------ |
+# | Index Key + Value | "$type"      | "claim" (string)         |
+# | Index Key + Value | "id"         | <CLAIM_ID> (int)         |
+# | Index Key + Value | "client"     | <CLIENT_ACTOR_ID> (int)  |
+# | Index Key + Value | "provider"   | <SP_ACTOR_ID> (int)      |
+# | Index Key + Value | "piece-cid"  | <PIECE_CID> (cid)        |
+# | Index Key         | "piece-size" | <PIECE_SIZE> (int)       |
+# | Index Key         | "term-min"   | <TERM_MINIMUM> (int)     |
+# | Index Key         | "term-max"   | <TERM_MAXIMUM> (int)     |
+# | Index Key         | "term-start" | <TERM_START> (int)       |
+# | Index Key + Value | "sector"     | <SECTOR_ID> (int)        |
+
+type ClaimEvent struct {
+  id Int
+  client Int
+  provider Int
+  pieceCid &Any
+  pieceSize Int
+  termMin Int
+  termMax Int
+  termStart Int
+  sector Int
+}
+
+# | flags             | key             | value                         |
+# | ----------------- | --------------- | ----------------------------- |
+# | Index Key + Value | "$type"         | "claim-updated" (string)      |
+# | Index Key + Value | "id"            | <CLAIM_ID> (int)              |
+# | Index Key + Value | "client"        | <CLIENT_ACTOR_ID> (int)       |
+# | Index Key + Value | "provider"      | <SP_ACTOR_ID> (int)           |
+# | Index Key + Value | "piece-cid"     | <PIECE_CID> (cid)             |
+# | Index Key         | "piece-size"    | <PIECE_SIZE> (int)            |
+# | Index Key         | "term-min"      | <TERM_MINIMUM> (int)          |
+# | Index Key         | "term-max"      | <TERM_MAXIMUM> (int)          |
+# | Index Key         | "term-start"    | <TERM_START> (int)            |
+# | Index Key + Value | "sector"        | <SECTOR_ID> (int)             |
+
+type ClaimUpdatedEvent struct {
+  id Int
+  client Int
+  provider Int
+  pieceCid &Any
+  pieceSize Int
+  termMin Int
+  termMax Int
+  termStart Int
+  sector Int
+}
+
+# | flags             | key          | value                    |
+# | ----------------- | ------------ | ------------------------ |
+# | Index Key + Value | "$type"      | "claim-removed" (string) |
+# | Index Key + Value | "id"         | <CLAIM_ID> (int)         |
+# | Index Key + Value | "client"     | <CLIENT_ACTOR_ID> (int)  |
+# | Index Key + Value | "provider"   | <SP_ACTOR_ID> (int)      |
+# | Index Key + Value | "piece-cid"  | <PIECE_CID> (cid)        |
+# | Index Key         | "piece-size" | <PIECE_SIZE> (int)       |
+# | Index Key         | "term-min"   | <TERM_MINIMUM> (int)     |
+# | Index Key         | "term-max"   | <TERM_MAXIMUM> (int)     |
+# | Index Key         | "term-start" | <TERM_START> (int)       |
+# | Index Key + Value | "sector"     | <SECTOR_ID> (int)        |
+
+type ClaimRemovedEvent struct {
+  id Int
+  client Int
+  provider Int
+  pieceCid &Any
+  pieceSize Int
+  termMin Int
+  termMax Int
+  termStart Int
+  sector Int
+}
+
+# | flags             | key                   | value                              |
+# | ----------------- | --------------------- | ---------------------------------- |
+# | Index Key + Value | "$type"               | "deal-published" (string)          |
+# | Index Key + Value | "id"                  | <DEAL_ID> (int)                    |
+# | Index Key + Value | "client"              | <STORAGE_CLIENT_ACTOR_ID> (int)    |
+# | Index Key + Value | "provider"            | <STORAGE_PROVIDER_ACTOR_ID> (int)  |
+
+type DealPublishedEvent struct {
+  id Int
+  client Int
+  provider Int
+}
+
+# | flags             | key                   | value                              |
+# | ----------------- | --------------------- | ---------------------------------- |
+# | Index Key + Value | "$type"               | "deal-activated" (string)          |
+# | Index Key + Value | "id"                  | <DEAL_ID> (int)                    |
+# | Index Key + Value | "client"              | <STORAGE_CLIENT_ACTOR_ID> (int)    |
+# | Index Key + Value | "provider"            | <STORAGE_PROVIDER_ACTOR_ID> (int)  |
+
+type DealActivatedEvent struct {
+  id Int
+  client Int
+  provider Int
+}
+
+# | flags             | key                   | value                             |
+# | ----------------- | --------------------- | --------------------------------- |
+# | Index Key + Value | "$type"               | "deal-terminated" (string)        |
+# | Index Key + Value | "id"                  | <DEAL_ID> (int)                   |
+# | Index Key + Value | "client"              | <STORAGE_CLIENT_ACTOR_ID> (int)   |
+# | Index Key + Value | "provider"            | <STORAGE_PROVIDER_ACTOR_ID> (int) |
+
+type DealTerminatedEvent struct {
+  id Int
+  client Int
+  provider Int
+}
+
+# | flags             | key                   | value                             |
+# | ----------------- | --------------------- | --------------------------------- |
+# | Index Key + Value | "$type"               | "deal-completed" (string)         |
+# | Index Key + Value | "id"                  | <DEAL_ID> (int)                   |
+# | Index Key + Value | "client"              | <STORAGE_CLIENT_ACTOR_ID> (int)   |
+# | Index Key + Value | "provider"            | <STORAGE_PROVIDER_ACTOR_ID> (int) |
+
+type DealCompletedEvent struct {
+  id Int
+  client Int
+  provider Int
+}
+
+# | flags             | key                | value                                                         |
+# | ----------------- | ------------------ | ------------------------------------------------------------- |
+# | Index Key + Value | "$type"            | "sector-precommitted" (string)                                |
+# | Index Key + Value | "sector"           | <SECTOR_NUMBER> (int)                                          |
+
+type SectorPrecommittedEvent struct {
+  sector Int
+}
+
+# | flags             | key            | value                                                         |
+# | ----------------- | -------------- | ------------------------------------------------------------- |
+# | Index Key + Value | "$type"        | "sector-activated" (string)                                   |
+# | Index Key + Value | "sector"       | <SECTOR_NUMBER> (int)                                          |
+# | Index Key + Value | "unsealed-cid" | <SECTOR_COMMD> (nullable cid) (null means sector has no data) |
+# | Index Key + Value | "piece-cid"    | <PIECE_CID> (cid)                                             |
+# | Index Key         | "piece-size"   | <PIECE_SIZE> (int)                                            |
+
+type PieceInfo struct {
+  pieceCid &Any
+  pieceSize Int
+}
+
+type SectorActivatedEvent struct {
+  sector Int
+  unsealedCid nullable &Any
+  pieces optional [PieceInfo]
+}
+
+# | flags             | key            | value                                                         |
+# | ----------------- | -------------- | ------------------------------------------------------------- |
+# | Index Key + Value | "$type"        | "sector-updated" (string)                                     |
+# | Index Key + Value | "sector"       | <SECTOR_NUMBER> (int)                                          |
+# | Index Key + Value | "unsealed-cid" | <SECTOR_COMMD> (nullable cid) (null means sector has no data) |
+# | Index Key + Value | "piece-cid"    | <PIECE_CID> (cid)                                             |
+# | Index Key         | "piece-size"   | <PIECE_SIZE> (int)                                            |
+
+type SectorUpdatedEvent struct {
+  sector Int
+  unsealedCid nullable &Any
+  pieces optional [PieceInfo]
+}
+
+# | flags             | key       | value                        |
+# | ----------------- | --------- | ---------------------------- |
+# | Index Key + Value | "$type"   | "sector-terminated" (string) |
+# | Index Key + Value | "sector"  | <SECTOR_NUMBER> (int)         |
+
+type SectorTerminatedEvent struct {
+  sector Int
+}
+

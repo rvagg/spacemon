@@ -1,0 +1,5 @@
+{
+  "network": "calibration",
+  "lotusWebsocketRpc": "ws://localhost:1235/rpc/v1",
+  "lotusHttpRpc": "http://localhost:1235/rpc/v1"
+}
