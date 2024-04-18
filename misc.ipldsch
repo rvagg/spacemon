@@ -1,0 +1,9 @@
+type BatchReturn struct {
+  successCount Int
+  failCodes [FailCode]
+} representation tuple
+
+type FailCode struct {
+  index Int
+  code Int
+} representation tuple

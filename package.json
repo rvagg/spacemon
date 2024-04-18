@@ -8,7 +8,7 @@
   "bin": "spacemon.js",
   "scripts": {
     "lint": "standard",
-    "test": "npm run lint",
+    "test": "npm run lint && mocha",
     "start": "node spacemon.js"
   },
   "author": {
@@ -20,8 +20,14 @@
     "@ipld/dag-cbor": "^9.2.0",
     "@ipld/dag-json": "^10.2.0",
     "@ipld/schema": "^4.2.14",
+    "@multiformats/blake2": "^2.0.2",
     "multiformats": "^13.1.0",
+    "split2": "^4.2.0",
     "standard": "^17.1.0",
     "undici": "^6.11.1"
+  },
+  "devDependencies": {
+    "chai": "^5.1.0",
+    "mocha": "^10.4.0"
   }
 }
