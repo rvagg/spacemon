@@ -9,7 +9,8 @@ import { collectExtraState } from './lib/builtin-actor-events.js'
  */
 
 const nv22Epoch = {
-  calibnet: 1493854, // the fixed height, nv22 was technically before this but the events weren't complete
+  // calibnet: 1493854, // the fixed height, nv22 was technically before this but the events weren't complete
+  calibnet: 1427974, // the original nv22 height on calibnet, before fix
   mainnet: 3855360
 }
 const finalityEpochs = 900 // don't consider events from epochs newer than this, reverts are hard
