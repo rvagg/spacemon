@@ -2,7 +2,7 @@
 import { loadConfig } from './lib/config.js'
 import { createApi } from './lib/lotus.js'
 import { createStore } from './lib/store.js'
-import { collectExtraState } from './lib/builtin-actor-events.js'
+import { collectExtraState, allEventTypes } from './lib/builtin-actor-events.js'
 
 /**
  * @typedef {import('./src/store.js').Store} Store
@@ -19,53 +19,56 @@ const maxFilterEpochRange = Math.floor(epochsPerDay / 2) // default in lotus is 
 const loopPauseTime = 1000 * 10 // 10 seconds
 
 const config = await loadConfig('./config.json')
-const rpc = await createApi(config)
 
-// TODO: probably need to be able to start later, a node is unlikely to have all historical events
-// unless they are an archive node
-if (nv22Epoch[config.network] == null) {
-  throw new Error(`No nv22 epoch defined for network ${config.network}`)
-}
-const { store, latestEpoch } = await createStore(config)
-let startEpoch = nv22Epoch[config.network]
-if (latestEpoch != null) {
-  startEpoch = Math.max(latestEpoch + 1, startEpoch)
-}
+cmdCollect().catch(e => {
+  console.error(e)
+  process.exit(1)
+})
 
-// All types:
-const eventTypes = ['verifier-balance', 'allocation', 'allocation-removed', 'claim',
-  'claim-updated', 'claim-removed', 'deal-published', 'deal-activated', 'deal-terminated',
-  'deal-completed', 'sector-precommitted', 'sector-activated', 'sector-updated',
-  'sector-terminated']
-// const eventTypes = ['allocation', 'sector-activated', 'sector-updated', 'verifier-balance']
+async function cmdCollect () {
+  const rpc = await createApi(config)
 
-console.log('Starting at', startEpoch, 'looking for', eventTypes.join(', '))
-
-while (true) {
-  const currentHeight = (await rpc.chainHead()).Height
-  const latestHeight = currentHeight - finalityEpochs
-  const endEpoch = Math.min(startEpoch + maxFilterEpochRange, latestHeight)
-  if (endEpoch === startEpoch) {
-    await new Promise(resolve => setTimeout(resolve, loopPauseTime))
-    continue
+  // TODO: we need a way to start later, a node is unlikely to have all historical events from nv22
+  // unless they are an archive node
+  if (nv22Epoch[config.network] == null) {
+    throw new Error(`No nv22 epoch defined for network ${config.network}`)
   }
-  try {
-    await collectRange(store, startEpoch, endEpoch, eventTypes)
-  } catch (e) {
-    console.error('Error collecting range, waiting to retry ...', startEpoch, endEpoch, e.message)
-    console.error(e.stack)
-    await new Promise(resolve => setTimeout(resolve, loopPauseTime))
+  const { store, latestEpoch } = await createStore(config)
+  let startEpoch = nv22Epoch[config.network]
+  if (latestEpoch != null) {
+    startEpoch = Math.max(latestEpoch + 1, startEpoch)
   }
-  startEpoch = endEpoch
+
+  // Collect all builtin-actor events, gotta catch 'em all!
+  const eventTypes = allEventTypes
+  console.log('Starting at', startEpoch, 'looking for', eventTypes.join(', '))
+
+  while (true) {
+    const currentHeight = (await rpc.chainHead()).Height
+    const latestHeight = currentHeight - finalityEpochs
+    const endEpoch = Math.min(startEpoch + maxFilterEpochRange, latestHeight)
+    if (endEpoch <= startEpoch) {
+      await new Promise(resolve => setTimeout(resolve, loopPauseTime))
+      continue
+    }
+    try {
+      await collectRange(store, rpc, startEpoch, endEpoch, eventTypes)
+    } catch (e) {
+      console.error('Error collecting range, waiting to retry ...', startEpoch, endEpoch, e.message)
+      console.error(e.stack)
+      await new Promise(resolve => setTimeout(resolve, loopPauseTime))
+    }
+    startEpoch = endEpoch + 1
+  }
 }
 
 /**
  * @param {{Store}} store
- * @param {number} startEpoch
- * @param {number} endEpoch
+ * @param {number} startEpoch - inclusive
+ * @param {number} endEpoch - inclusive
  * @param {string[]} eventTypes
  */
-async function collectRange (store, startEpoch, endEpoch, eventTypes) {
+async function collectRange (store, rpc, startEpoch, endEpoch, eventTypes) {
   let saveCount = 0
   for await (const { rawEvent, event } of rpc.builtinActorEvents(startEpoch, endEpoch, eventTypes)) {
     const extra = await collectExtraState(event, rpc)
