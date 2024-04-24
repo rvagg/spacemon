@@ -67,12 +67,10 @@ while (true) {
 async function collectRange (store, startEpoch, endEpoch, eventTypes) {
   let saveCount = 0
   for await (const { rawEvent, event } of rpc.builtinActorEvents(startEpoch, endEpoch, eventTypes)) {
-    /*
     const extra = await collectExtraState(event, rpc)
     if (extra != null) {
       event.extra = extra
     }
-    */
     /*
     if (typeof event.event.sector === 'number') {
       // Don't use event.tipsetKey because many Lotus APIs load state from the parent of a tipset

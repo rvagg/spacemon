@@ -7,3 +7,34 @@ type FailCode struct {
   index Int
   code Int
 } representation tuple
+
+type ProveCommitSectors3Params struct {
+  sectorActivations [SectorActivationManifest]
+  sectorProofs [Bytes]
+  aggregateProof Bytes
+  aggregateProofType nullable Int
+  RequireActivationSuccess Bool
+  RequireNotificationSuccess Bool
+} representation tuple
+
+type SectorActivationManifest struct {
+	sectorNumber Int
+	pieces [PieceActivationManifest]
+} representation tuple
+
+type PieceActivationManifest struct {
+	cid &Any
+	size Int
+	verifiedAllocationKey nullable VerifiedAllocationKey
+	notify [DataActivationNotification]
+} representation tuple
+
+type VerifiedAllocationKey struct {
+	client Int
+	id Int
+} representation tuple
+
+type DataActivationNotification struct {
+	address Bytes
+	payload Bytes
+} representation tuple
