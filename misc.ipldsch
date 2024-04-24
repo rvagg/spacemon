@@ -13,12 +13,30 @@ type ProveCommitSectors3Params struct {
   sectorProofs [Bytes]
   aggregateProof Bytes
   aggregateProofType nullable Int
-  RequireActivationSuccess Bool
-  RequireNotificationSuccess Bool
+  requireActivationSuccess Bool
+  requireNotificationSuccess Bool
 } representation tuple
 
 type SectorActivationManifest struct {
-	sectorNumber Int
+	sector Int
+	pieces [PieceActivationManifest]
+} representation tuple
+
+type ProveReplicaUpdates3Params struct {
+	sectorUpdates [SectorUpdateManifest]
+  sectorProofs [Bytes]
+  aggregateProof Bytes
+	updateProofsType Int
+  aggregateProofType nullable Int
+  requireActivationSuccess Bool
+  requireNotificationSuccess Bool
+} representation tuple
+
+type SectorUpdateManifest struct {
+	sector Int
+	deadline Int
+	partition Int
+	newSealedCid &Any
 	pieces [PieceActivationManifest]
 } representation tuple
 
