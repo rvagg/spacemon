@@ -9,7 +9,10 @@
   "scripts": {
     "lint": "standard",
     "test": "npm run lint && mocha",
-    "start": "node spacemon.js"
+    "collect-calibnet": "node spacemon.js collect calibnet-config.json",
+    "collect-mainnet": "node spacemon.js collect mainnet-config.json",
+    "compile-ddo-calibnet": "node spacemon.js compile-ddo calibnet-config.json",
+    "compile-ddo-mainnet": "node spacemon.js compile-ddo mainnet-config.json"
   },
   "author": {
     "name": "Rod Vagg",
@@ -24,7 +27,8 @@
     "multiformats": "^13.1.0",
     "split2": "^4.2.0",
     "standard": "^17.1.0",
-    "undici": "^6.11.1"
+    "undici": "^6.11.1",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "chai": "^5.1.0",

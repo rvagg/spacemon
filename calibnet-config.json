@@ -1,0 +1,7 @@
+{
+  "network": "calibnet",
+  "lotusWebsocketRpc": "ws://localhost:1235/rpc/v1",
+  "lotusHttpRpc": "http://localhost:1235/rpc/v1",
+  "storePath": "./store",
+  "apiCachePath": "./api-cache"
+}
