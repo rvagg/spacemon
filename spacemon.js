@@ -86,9 +86,12 @@ async function cmdCollect (argv) {
         await sleep(loopPauseSeconds)
       } else if (e instanceof MaxResultsError) {
         console.error(`Max results reached for GetActorEventsRaw (start=${startEpoch}, end=${endEpoch}), adjusting filter range`)
-        filterEpochRange = Math.floor(filterEpochRange / 2)
-        if (filterEpochRange < 5) {
+        if (filterEpochRange === 1) {
           throw new Error('Filter epoch range is too small, exiting')
+        }
+        filterEpochRange = Math.floor(filterEpochRange / 2)
+        if (filterEpochRange <= 0) {
+          throw new Error(`Unexpected filter epoch range ${filterEpochRange} is too small, exiting`)
         }
       } else {
         throw e
