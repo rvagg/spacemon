@@ -2,6 +2,9 @@
   "network": "calibnet",
   "lotusWebsocketRpc": "ws://localhost:1235/rpc/v1",
   "lotusHttpRpc": "http://localhost:1235/rpc/v1",
+  "actorEvents": ["verifier-balance", "allocation", "allocation-removed", "claim", "claim-updated", "claim-removed", "deal-published", "deal-activated", "deal-terminated", "deal-completed", "sector-precommitted", "sector-activated", "sector-updated", "sector-terminated"],
+  "maxFilters": 10000,
   "storePath": "./store",
-  "apiCachePath": "./api-cache"
+  "apiCachePath": "./api-cache",
+  "startEpoch": 1427974
 }

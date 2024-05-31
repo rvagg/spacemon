@@ -55,13 +55,19 @@ async function cmdCollect (argv) {
   }
   const store = await createStore(config, true)
   const latestEpoch = await store.latestEpoch()
-  let startEpoch = networkParams[config.network].nv22Epoch
+  let startEpoch = config.startEpoch
+  if (!startEpoch || startEpoch < 0) {
+    startEpoch = networkParams[config.network].nv22Epoch
+  }
   if (latestEpoch != null) {
     startEpoch = Math.max(latestEpoch + 1, startEpoch)
   }
 
   // Collect all builtin-actor events, gotta catch 'em all!
-  const eventTypes = allEventTypes
+  let eventTypes = config.eventTypes
+  if (!Array.isArray(eventTypes) || eventTypes.length === 0) {
+    eventTypes = allEventTypes
+  }
   console.log('Starting at', startEpoch, 'looking for', eventTypes.join(', '))
 
   let filterEpochRange = maxFilterEpochRange

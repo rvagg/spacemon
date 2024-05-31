@@ -1,7 +1,10 @@
 {
   "network": "mainnet",
-  "lotusWebsocketRpc": "ws://localhost:1234/rpc/v1",
   "lotusHttpRpc": "http://localhost:1234/rpc/v1",
+  "lotusBackupHttpRpc": "https://api.zondax.ch/fil/node/mainnet/rpc/v1",
+  "actorEvents": ["verifier-balance", "allocation", "allocation-removed", "claim", "claim-updated", "claim-removed", "deal-published", "deal-activated", "deal-terminated", "deal-completed", "sector-precommitted", "sector-activated", "sector-updated", "sector-terminated"],
+  "maxFilters": 10000,
   "storePath": "./store",
-  "apiCachePath": "./api-cache"
+  "apiCachePath": "./api-cache",
+  "startEpoch": 3855360
 }
