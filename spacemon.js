@@ -125,9 +125,17 @@ async function cmdCompileDDO (argv) {
 async function collectRange (store, rpc, startEpoch, endEpoch, eventTypes) {
   let saved = 0
   for await (const { rawEvent, event } of rpc.builtinActorEvents(startEpoch, endEpoch, eventTypes)) {
-    const extra = await collectExtraState(event, rpc)
-    if (extra != null) {
-      event.extra = extra
+    try {
+      const extra = await collectExtraState(event, rpc)
+      if (extra != null) {
+        event.extra = extra
+      }
+    } catch (e) {
+      if (event.reverted) {
+        console.error('ignoring error for reverted event: ', e)
+      } else {
+        throw e
+      }
     }
     await store.save(rawEvent, event)
     saved++
